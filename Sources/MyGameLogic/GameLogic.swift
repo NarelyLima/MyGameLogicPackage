@@ -46,58 +46,58 @@ public class GameLogic {
             distributeCards = true
             //            // da cartas
             giveCardsToPlayers(distributeCards)
-            giveThreeCardsToPlayers(distributeCards)
-        }
-//            // seleciona o primeiro jogador
-//            chooseFirstPlayer()
-////            // define o prox jogador
-//            definitionNextPlayer(currentIndex, jogadores.count)
-//
-////            // anuncia q o primeiro jogador deve começar
-//            sendMessagePlayer(currentPlayer)
-////            // pergunta qual a carta q o jogador vai usar para atacar
-//            print("""
-//                Name:  \(currentPlayer.name)
-//                Life:  \(currentPlayer.life)
-//                Cards: [1] \(currentPlayer.individualsCards[0].typeOfCards) Dano: \(currentPlayer.individualsCards[0].damage)
-//                       [2] \(currentPlayer.individualsCards[1].typeOfCards) Dano: \(currentPlayer.individualsCards[1].damage)
-//                       [3] \(currentPlayer.individualsCards[2].typeOfCards) Dano: \(currentPlayer.individualsCards[2].damage)
-//            """
-//            )
-//            askActionPlayer(currentPlayer, numberOfCard)
-////            // pergunta qual a carta q o jogador vai usar para se defender
-////            // e faz a tentativa de ataque
-//            print("""
-//                        JOGADOR ATACADO
-//                Name:  \(currentNextPlayer.name)
-//                Life:  \(currentNextPlayer.life)
-//                Cards: [1] \(currentNextPlayer.individualsCards[0].typeOfCards) Dano: \(currentNextPlayer.individualsCards[0].damage)
-//                       [2] \(currentNextPlayer.individualsCards[1].typeOfCards) Dano: \(currentNextPlayer.individualsCards[1].damage)
-//                       [3] \(currentNextPlayer.individualsCards[2].typeOfCards) Dano: \(currentNextPlayer.individualsCards[2].damage)
-//            """
-//            )
-//            haveAttackCard(currentNextPlayer, currentCard)
-//            nextPlayer()
-//
-//        } else {
-//            print("Infelizmente só 3 ou 4 jogadores poderão jogar")
-//            distributeCards = false
+//            giveThreeCardsToPlayers(distributeCards)
 //        }
+            // seleciona o primeiro jogador
+            chooseFirstPlayer()
+//            // define o prox jogador
+            definitionNextPlayer(currentIndex, jogadores.count)
+
+//            // anuncia q o primeiro jogador deve começar
+            sendMessagePlayer(currentPlayer)
+//            // pergunta qual a carta q o jogador vai usar para atacar
+            print("""
+                Name:  \(currentPlayer.name)
+                Life:  \(currentPlayer.life)
+                Cards: [1] \(currentPlayer.individualsCards[0].typeOfCards) Dano: \(currentPlayer.individualsCards[0].damage)
+                       [2] \(currentPlayer.individualsCards[1].typeOfCards) Dano: \(currentPlayer.individualsCards[1].damage)
+                       [3] \(currentPlayer.individualsCards[2].typeOfCards) Dano: \(currentPlayer.individualsCards[2].damage)
+            """
+            )
+            askActionPlayer(currentPlayer, numberOfCard)
+//            // pergunta qual a carta q o jogador vai usar para se defender
+//            // e faz a tentativa de ataque
+            print("""
+                        JOGADOR ATACADO
+                Name:  \(currentNextPlayer.name)
+                Life:  \(currentNextPlayer.life)
+                Cards: [1] \(currentNextPlayer.individualsCards[0].typeOfCards) Dano: \(currentNextPlayer.individualsCards[0].damage)
+                       [2] \(currentNextPlayer.individualsCards[1].typeOfCards) Dano: \(currentNextPlayer.individualsCards[1].damage)
+                       [3] \(currentNextPlayer.individualsCards[2].typeOfCards) Dano: \(currentNextPlayer.individualsCards[2].damage)
+            """
+            )
+            haveAttackCard(currentNextPlayer, currentCard)
+            nextPlayer()
+
+        } else {
+            print("Infelizmente só 3 ou 4 jogadores poderão jogar")
+            distributeCards = false
+        }
     }
     // da cartas
 
-    func giveThreeCardsToPlayers(_ giveCards: Bool) {
-        if giveCards {
-            for jogador in jogadores {
-                for i in 0..<3 {
-                    jogador.currentIndividualsCards.append(jogador.individualsCards[i])
-                    print(jogador.currentIndividualsCards)
-                }
-            }
-        } else {
-            print("Deu erro")
-        }
-    }
+//    func giveThreeCardsToPlayers(_ giveCards: Bool) {
+//        if giveCards {
+//            for jogador in jogadores {
+//                for i in 0..<3 {
+//                    jogador.currentIndividualsCards.append(jogador.individualsCards[i])
+//                    print(jogador.currentIndividualsCards)
+//                }
+//            }
+//        } else {
+//            print("Deu erro")
+//        }
+//    }
 
     func giveCardsToPlayers(_ start: Bool) {
         if start {
@@ -145,7 +145,7 @@ public class GameLogic {
 
     func dealCards() -> [Cards] {
 
-        for _ in 0..<cardsShuffle.count {
+        for _ in 0..<3 {
             randomCards.append(cardsShuffle.randomElement()!)
         }
         return randomCards
@@ -195,9 +195,9 @@ public class GameLogic {
                 tipo.typeOfCards == .attack
             }) {
                 currentCard = currentPlayer.individualsCards[numberOfCard-1]
-                updateHandCards(currentPlayer, numberOfCard-1)
+//                updateHandCards(currentPlayer, numberOfCard-1)
             } else {
-                updateHandCards(currentPlayer, numberOfCard-1)
+//                updateHandCards(currentPlayer, numberOfCard-1)
                 nextPlayer()
             }
         }
@@ -261,7 +261,7 @@ public class GameLogic {
         } else {
             currentCardNextPlayer = currentNextPlayer.individualsCards[numberOfCard-1]
             tryDefensePlayer(currentCardNextPlayer)
-            updateHandCardsNextPlayer(currentNextPlayer, numberOfCard-1)
+//            updateHandCardsNextPlayer(currentNextPlayer, numberOfCard-1)
         }
     }
 
