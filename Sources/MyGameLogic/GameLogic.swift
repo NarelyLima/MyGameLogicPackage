@@ -6,16 +6,18 @@ import Foundation
  framework -> lib que padroniza/abstrair o jeito de fazer algo
 
  app | internet | api    ->   web service | database
-                  public      private
+ public      private
 
  Mythos | api      ->     MyGameLogic
-        | public          internal
+ | public          internal
  */
 
 public class GameLogic {
 
     var jogadores: [Player] = []
     var numberOfPlayers: Int = 0
+
+    // State
     var distributeCards: Bool = false
     var startGame: Bool = false
     var willBeAttacked: Bool = true
@@ -28,9 +30,9 @@ public class GameLogic {
     var currentIndexNextPlayer: Int = 0
     var currentCardNextPlayer = Cards()
     var direcionamento: Int = 1
-    let cardsShuffle = cards.shuffled()
-    var randomCards: [Cards] = []
+    var handCards: [Cards] = []
     var danoTotal: Int = 0
+
 
     public init() { }
 
@@ -44,36 +46,38 @@ public class GameLogic {
                 jogadores.append(Player(id: i, name: "Jogador \(i+1)"))
             }
             distributeCards = true
-            //            // da cartas
+            // da cartas
             giveCardsToPlayers(distributeCards)
-//            giveThreeCardsToPlayers(distributeCards)
-//        }
+
+            startGame = true
+
+            giveThreeCardsToPlayers(startGame)
             // seleciona o primeiro jogador
             chooseFirstPlayer()
-//            // define o prox jogador
+            // define o prox jogador
             definitionNextPlayer(currentIndex, jogadores.count)
 
-//            // anuncia q o primeiro jogador deve começar
+            // anuncia q o primeiro jogador deve começar
             sendMessagePlayer(currentPlayer)
-//            // pergunta qual a carta q o jogador vai usar para atacar
+            //            // pergunta qual a carta q o jogador vai usar para atacar
             print("""
                 Name:  \(currentPlayer.name)
                 Life:  \(currentPlayer.life)
-                Cards: [1] \(currentPlayer.individualsCards[0].typeOfCards) Dano: \(currentPlayer.individualsCards[0].damage)
-                       [2] \(currentPlayer.individualsCards[1].typeOfCards) Dano: \(currentPlayer.individualsCards[1].damage)
-                       [3] \(currentPlayer.individualsCards[2].typeOfCards) Dano: \(currentPlayer.individualsCards[2].damage)
+                Cards: [1] \(currentPlayer.currentIndividualsCards[0].typeOfCards) Dano: \(currentPlayer.individualsCards[0].damage)
+                       [2] \(currentPlayer.currentIndividualsCards[1].typeOfCards) Dano: \(currentPlayer.individualsCards[1].damage)
+                       [3] \(currentPlayer.currentIndividualsCards[2].typeOfCards) Dano: \(currentPlayer.individualsCards[2].damage)
             """
             )
             askActionPlayer(currentPlayer, numberOfCard)
-//            // pergunta qual a carta q o jogador vai usar para se defender
-//            // e faz a tentativa de ataque
+            // pergunta qual a carta q o jogador vai usar para se defender
+            // e faz a tentativa de ataque
             print("""
                         JOGADOR ATACADO
                 Name:  \(currentNextPlayer.name)
                 Life:  \(currentNextPlayer.life)
-                Cards: [1] \(currentNextPlayer.individualsCards[0].typeOfCards) Dano: \(currentNextPlayer.individualsCards[0].damage)
-                       [2] \(currentNextPlayer.individualsCards[1].typeOfCards) Dano: \(currentNextPlayer.individualsCards[1].damage)
-                       [3] \(currentNextPlayer.individualsCards[2].typeOfCards) Dano: \(currentNextPlayer.individualsCards[2].damage)
+                Cards: [1] \(currentNextPlayer.currentIndividualsCards[0].typeOfCards) Dano: \(currentNextPlayer.currentIndividualsCards[0].damage)
+                       [2] \(currentNextPlayer.currentIndividualsCards[1].typeOfCards) Dano: \(currentNextPlayer.currentIndividualsCards[1].damage)
+                       [3] \(currentNextPlayer.currentIndividualsCards[2].typeOfCards) Dano: \(currentNextPlayer.currentIndividualsCards[2].damage)
             """
             )
             haveAttackCard(currentNextPlayer, currentCard)
@@ -86,45 +90,43 @@ public class GameLogic {
     }
     // da cartas
 
-//    func giveThreeCardsToPlayers(_ giveCards: Bool) {
-//        if giveCards {
-//            for jogador in jogadores {
-//                for i in 0..<3 {
-//                    jogador.currentIndividualsCards.append(jogador.individualsCards[i])
-//                    print(jogador.currentIndividualsCards)
-//                }
-//            }
-//        } else {
-//            print("Deu erro")
-//        }
-//    }
+    func giveThreeCardsToPlayers(_ giveCards: Bool) {
+        if giveCards {
+            for jogador in 0..<jogadores.count {
+                jogadores[jogador].currentIndividualsCards = dealThreeCards(jogadores[jogador].individualsCards)
+                handCards = [] // TODO: transformar em variavel local
+            }
+
+        } else {
+            print("Deu erro")
+        }
+    }
 
     func giveCardsToPlayers(_ start: Bool) {
         if start {
             for jogador in 0..<jogadores.count {
                 jogadores[jogador].individualsCards = dealCards()
-                randomCards = []
             }
         } else {
             print("Deu erro")
         }
     }
 
-    func defaultGamePlay(_ index: Int, _ life: Int) {
+    func defaultGamePlay(_ index: Int) {
 
         currentPlayer = jogadores[index]
         currentIndex = currentPlayer.id
-//        // define o prox jogador
+        // define o prox jogador
         definitionNextPlayer(index, jogadores.count)
         // anuncia q o primeiro jogador deve começar
         sendMessagePlayer(currentPlayer)
         // pergunta qual a carta q o jogador vai usar para atacar
         print("""
             Name:  \(currentPlayer.name)
-            Life:  \(life)
-            Cards: [1] \(currentPlayer.individualsCards[0].typeOfCards) Dano: \(currentPlayer.individualsCards[0].damage)
-                   [2] \(currentPlayer.individualsCards[1].typeOfCards) Dano: \(currentPlayer.individualsCards[1].damage)
-                   [3] \(currentPlayer.individualsCards[2].typeOfCards) Dano: \(currentPlayer.individualsCards[2].damage)
+            Life:  \(currentPlayer.life)
+            Cards: [1] \(currentPlayer.currentIndividualsCards[0].typeOfCards) Dano: \(currentPlayer.currentIndividualsCards[0].damage)
+                   [2] \(currentPlayer.currentIndividualsCards[1].typeOfCards) Dano: \(currentPlayer.currentIndividualsCards[1].damage)
+                   [3] \(currentPlayer.currentIndividualsCards[2].typeOfCards) Dano: \(currentPlayer.currentIndividualsCards[2].damage)
         """
         )
         askActionPlayer(currentPlayer, numberOfCard)
@@ -134,26 +136,42 @@ public class GameLogic {
             JOGADOR ATACADO
             Name:  \(currentNextPlayer.name)
             Life:  \(currentNextPlayer.life)
-            Cards: [1] \(currentNextPlayer.individualsCards[0].typeOfCards) Dano: \(currentNextPlayer.individualsCards[0].damage)
-                   [2] \(currentNextPlayer.individualsCards[1].typeOfCards) Dano: \(currentNextPlayer.individualsCards[1].damage)
-                   [3] \(currentNextPlayer.individualsCards[2].typeOfCards) Dano: \(currentNextPlayer.individualsCards[2].damage)
+            Cards: [1] \(currentNextPlayer.currentIndividualsCards[0].typeOfCards) Dano: \(currentNextPlayer.currentIndividualsCards[0].damage)
+                   [2] \(currentNextPlayer.currentIndividualsCards[1].typeOfCards) Dano: \(currentNextPlayer.currentIndividualsCards[1].damage)
+                   [3] \(currentNextPlayer.currentIndividualsCards[2].typeOfCards) Dano: \(currentNextPlayer.currentIndividualsCards[2].damage)
         """
         )
         haveAttackCard(currentNextPlayer, currentCard)
-        nextPlayer()
+        while jogadores.count > 1 {
+            nextPlayer()
+        }
     }
 
     func dealCards() -> [Cards] {
-
-        for _ in 0..<3 {
-            randomCards.append(cardsShuffle.randomElement()!)
+        var randomCards: [Cards] = []
+        for _ in 0..<cards.shuffled().count {
+            randomCards.append(cards.shuffled().randomElement()!)
         }
         return randomCards
     }
 
-//    func dealThreeCards() -> [Cards] {
-////        for jogador in jogador 
+// FIXME: Fazer uma logica que remova os cards quando eles vao pra mao
+//    func dealCards(player: Player) -> [Cards] {
+//        var randomCards: [Cards] = []
+//        let individualCardsShuffled = player.individualsCards.shuffled()
+//        individualCardsShuffled.forEach {
+//            randomCards.append(individualCardsShuffled.randomElement()!)
+//            // TODO: remover card do individual
+//        }
+//        return randomCards
 //    }
+
+    func dealThreeCards(_ deckPlayer: [Cards]) -> [Cards] {
+        for i in 0..<3 {
+            handCards.append(deckPlayer[i])
+        }
+        return handCards
+    }
 
     // Escolhe o jogador atual e o próximo jogador em relaçao a ele
 
@@ -191,14 +209,16 @@ public class GameLogic {
                 numberOfCard = inputUser()
             }
         } else {
-            if currentPlayer.individualsCards.contains(where: { tipo in
+            if currentPlayer.currentIndividualsCards.contains(where: { tipo in
                 tipo.typeOfCards == .attack
             }) {
-                currentCard = currentPlayer.individualsCards[numberOfCard-1]
-//                updateHandCards(currentPlayer, numberOfCard-1)
+                currentCard = currentPlayer.currentIndividualsCards[numberOfCard-1]
+                distributeCardsAgain(currentPlayer, numberOfCard-1)
             } else {
-//                updateHandCards(currentPlayer, numberOfCard-1)
-                nextPlayer()
+                distributeCardsAgain(currentPlayer, numberOfCard-1)
+                while jogadores.count > 1 {
+                    nextPlayer()
+                }
             }
         }
     }
@@ -208,7 +228,7 @@ public class GameLogic {
     // tentativa de ataque no próximo jogador
 
     func haveAttackCard(_ nextPlayer: Player, _ currentCard: Cards) {
-        if nextPlayer.individualsCards.contains(where: { tipo in
+        if nextPlayer.currentIndividualsCards.contains(where: { tipo in
             tipo.typeOfCards == .defense
         }) {
             askReactionPlayer(nextPlayer, numberOfCard)
@@ -222,8 +242,12 @@ public class GameLogic {
             currentNextPlayer.life = lifePlayerUpdate(danoTotal, currentNextPlayer)
 
             print("Você nao tem carta de defesa, logo recebeu dano")
-            
-            print("A vida do jogador atacado é: ", currentNextPlayer.life)
+
+            print("A vida do \(currentNextPlayer.name) é: ", currentNextPlayer.life)
+
+            if currentNextPlayer.life <= 0 {
+                lostGamePlayer(currentIndexNextPlayer)
+            }
         }
     }
 
@@ -241,14 +265,16 @@ public class GameLogic {
             danoTotal = danoTotal <= 0 ? 0 : danoTotal
             currentNextPlayer.life = lifePlayerUpdate(danoTotal, currentNextPlayer)
 
-            print("A vida do jogador atacado é: ", currentNextPlayer.life)
+            print("A vida do \(currentNextPlayer.name) é: ", currentNextPlayer.life)
+            if currentNextPlayer.life <= 0 {
+                lostGamePlayer(currentIndexNextPlayer)
+            }
         }
     }
 
     // pergunta com qual carta a pessoa vai se defender
 
     func askReactionPlayer(_ player: Player, _ numberCard: Int) {
-
         print("Com qual carta você irá reagir? [1, 2 ou 3]")
         numberOfCard = inputUser()
         let validOptions2 = [1, 2, 3]
@@ -259,9 +285,9 @@ public class GameLogic {
                 numberOfCard = inputUser()
             }
         } else {
-            currentCardNextPlayer = currentNextPlayer.individualsCards[numberOfCard-1]
+            currentCardNextPlayer = currentNextPlayer.currentIndividualsCards[numberOfCard-1]
             tryDefensePlayer(currentCardNextPlayer)
-//            updateHandCardsNextPlayer(currentNextPlayer, numberOfCard-1)
+            distributeCardsAgain(currentNextPlayer, numberOfCard-1)
         }
     }
 
@@ -273,8 +299,7 @@ public class GameLogic {
 
     func nextPlayer() {
         currentIndex = (currentIndex + direcionamento) % jogadores.count
-        currentPlayer.life = currentNextPlayer.life
-        defaultGamePlay(currentIndex,currentPlayer.life)
+        defaultGamePlay(currentIndex)
     }
 
     func lifePlayerUpdate(_ danoTotal: Int, _ nextPlayer: Player) -> Int {
@@ -286,22 +311,36 @@ public class GameLogic {
 
     }
 
-    func updateHandCards(_ player: Player, _ numberCard: Int) {
-
-        var handDeckBeforeMoviment = player.individualsCards
+    func updateHandCards(_ currentPlayer: Player, _ numberCard: Int) {
+        var handDeckBeforeMoviment = currentPlayer.currentIndividualsCards
         let killDeck = handDeckBeforeMoviment.remove(at: numberCard)
-        player.individualsCards = handDeckBeforeMoviment
-        player.killDeck.append(killDeck)
-
+        currentPlayer.currentIndividualsCards = handDeckBeforeMoviment
+        currentPlayer.killDeck.append(killDeck)
     }
 
-    func updateHandCardsNextPlayer(_ nextPlayer: Player, _ numberCard: Int) {
+    func pullCardPlayer(_ player: Player, _ numberOfCardPlayed: Int) {
+        player.currentIndividualsCards.insert(player.individualsCards[3], at: numberOfCardPlayed)
+        player.individualsCards.remove(at: numberOfCardPlayed)
+        let removeDeck = player.individualsCards.remove(at: 2)
+        player.individualsCards.insert(removeDeck, at: numberOfCardPlayed)
+    }
 
-        var handDeckBeforeMoviment = nextPlayer.individualsCards
-        let killDeck = handDeckBeforeMoviment.remove(at: numberCard)
-        nextPlayer.individualsCards = handDeckBeforeMoviment
-        nextPlayer.killDeck.append(killDeck)
+    func distributeCardsAgain(_ player: Player, _ numberOfCardPlayed: Int) {
+        if player.individualsCards.count == 3 {
+            player.individualsCards += player.killDeck
+            print("deck renovado")
+        } else {
+            updateHandCards(player, numberOfCardPlayed)
+            pullCardPlayer(player, numberOfCardPlayed)
+        }
+    }
 
+    func lostGamePlayer(_ numberPlayed: Int) {
+        let player = jogadores.remove(at: numberPlayed)
+        print("\(player.name) nao joga mais")
+
+//        let expectedNextIndex = (currentIndex + direcionamento) % jogadores.count
+//        currentNextPlayer = jogadores[expectedNextIndex]
     }
 
     func inputUser() -> Int {
