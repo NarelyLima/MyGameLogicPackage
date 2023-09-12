@@ -120,8 +120,38 @@ final class MyGameLogicTests: XCTestCase {
         let result = gameLogic.currentNextPlayer.individualsCards
 
         XCTAssertEqual(result, nextPlayer.individualsCards)
-
     }
+    func testPullCards() {
+        let player = Player(individualsCards: [Cards(id: 0), Cards(id: 4), Cards(id: 6), Cards(id: 7)], currentIndividualsCards: [Cards(id: 0), Cards(id: 4), Cards(id: 6)])
+        gameLogic.updateHandCards(player, 0)
+        gameLogic.pullCardPlayer(player, 0)
+        let result = player.currentIndividualsCards
+        XCTAssertEqual(result, [Cards(id: 7), Cards(id: 4), Cards(id: 6)])
+    }
+    func testRedistributeCards() {
+        let player = Player(individualsCards: [Cards(id: 0), Cards(id: 4), Cards(id: 6), Cards(id: 7), Cards(id: 1), Cards(id: 3), Cards(id: 8)], currentIndividualsCards: [Cards(id: 0), Cards(id: 4), Cards(id: 6)])
+        gameLogic.distributeCardsAgain(player, 2)
+        let result = player.individualsCards
+        XCTAssertEqual(result, [Cards(id: 0), Cards(id: 4), Cards(id: 7), Cards(id: 1), Cards(id: 3), Cards(id: 8)])
+    }
+        func testRemovePlayer() {
+            let player = Player(id: 0, life: 30)
+            let player2 = Player(id: 1, life: 0)
+            let player3 = Player(id: 2, life: 10)
+            gameLogic.jogadores.append(player)
+            gameLogic.jogadores.append(player2)
+            gameLogic.jogadores.append(player3)
+            for jogador in gameLogic.jogadores {
+                if jogador.life <= 0 {
+                    gameLogic.jogadores.remove(at: jogador.id)
+                }
+            }
+    //        gameLogic.lostGamePlayer(player3)
+            print(gameLogic.jogadores[1].id)
+    //        gameLogic.lostGamePlayer(player3)
+//            let result = gameLogic.jogadores.count
+//            XCTAssertEqual(result, 2)
+        }
 
     func testGameplay() {
         print("Quantos jogadores vao jogar?")

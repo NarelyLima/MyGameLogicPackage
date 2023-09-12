@@ -8,14 +8,14 @@
 import Foundation
 
 public class Player {
-    var id = Int()
-    var name = String()
-    var life: Int = 30
-    var individualsCards = [Cards]()
-    var currentIndividualsCards = [Cards]()
-    var killDeck = [Cards]()
+    var id: Int
+    var name: String
+    var life: Int
+    var individualsCards: [Cards]
+    var currentIndividualsCards: [Cards]
+    var killDeck: [Cards]
 
-    public init(id: Int = Int(), name: String = String(), life: Int = 30, individualsCards: [Cards] = [Cards](), currentIndividualsCards: [Cards] = [Cards](), killDeck: [Cards] = [Cards]()) {
+    public init(id: Int = Int(), name: String = String(), life: Int = 15, individualsCards: [Cards] = [Cards](), currentIndividualsCards: [Cards] = [Cards](), killDeck: [Cards] = [Cards]()) {
         self.id = id
         self.name = name
         self.life = life
@@ -46,16 +46,16 @@ public enum TypesOfCards {
 }
 
 
-let cards: [Cards] = [Cards(id: 0, typeOfCards: .attack, damage: 5),
-                      Cards(id: 1, typeOfCards: .attack, damage: 2),
-                      Cards(id: 2, typeOfCards: .attack, damage: 3),
-                      Cards(id: 3, typeOfCards: .attack, damage: 1),
+let cards: [Cards] = [Cards(id: 0, typeOfCards: .attack, damage: 15),
+                      Cards(id: 1, typeOfCards: .attack, damage: 12),
+                      Cards(id: 2, typeOfCards: .attack, damage: 13),
+                      Cards(id: 3, typeOfCards: .attack, damage: 11),
                       Cards(id: 4, typeOfCards: .attack, damage: 6),
-                      Cards(id: 5, typeOfCards: .attack, damage: 2),
-                      Cards(id: 6, typeOfCards: .attack, damage: 3),
-                      Cards(id: 7, typeOfCards: .attack, damage: 4),
+                      Cards(id: 5, typeOfCards: .attack, damage: 8),
+                      Cards(id: 6, typeOfCards: .attack, damage: 9),
+                      Cards(id: 7, typeOfCards: .attack, damage: 10),
                       Cards(id: 8, typeOfCards: .attack, damage: 5),
-                      Cards(id: 9, typeOfCards: .attack, damage: 1),
+                      Cards(id: 9, typeOfCards: .attack, damage: 7),
                       Cards(id: 10, typeOfCards: .defense, damage: 2),
                       Cards(id: 11, typeOfCards: .defense, damage: 3),
                       Cards(id: 12, typeOfCards: .defense, damage: 1),
